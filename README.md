@@ -14,6 +14,39 @@ To make the app super fast and easy to maintain, we've split it into two main pi
 
 ---
 
+## The Database Layer — Neon PostgreSQL
+
+Every piece of user data in this application lives in a PostgreSQL database. For production, we use Neon — and it is worth spending a moment to explain why and how to get it set up.
+
+### What is Neon?
+
+Neon is a serverless PostgreSQL cloud platform. Think of it as a regular PostgreSQL database that you don't have to manage yourself — no servers to spin up, no config files to tweak. You sign up, create a database, and get a connection string. That's really it.
+
+The reason we chose Neon over a traditional hosted database is that it has a generous free tier, it scales automatically, and it wakes up instantly even after periods of inactivity — which is perfect for a project hosted on Render's free tier where the backend itself can also spin down.
+
+### What the database stores
+
+The application manages four tables, and they are all created automatically the very first time you start the backend — no manual SQL scripts needed.
+
+- **users** — stores registered accounts with hashed passwords. Emails are unique, so no two users can share the same address.
+- **loans** — stores each loan a user enters, including the lender name, loan type, outstanding amount, EMI, overdue status, income, and monthly expenses. These numbers feed the debt stress calculations.
+- **stress_snapshots** — every time the app calculates your debt-to-income ratio and stress score, it saves a snapshot. This is how the dashboard can show you historical trends over time rather than just your current state.
+- **letters** — stores every negotiation letter the system generates for you, whether it came from Gemini AI or the built-in fallback template. Letters are tied to a specific loan and creditor.
+
+### How to set up Neon for this project
+
+1. Go to [neon.tech](https://neon.tech) and create a free account.
+2. Click **New Project**, give it a name like `finrelief`, and choose a region close to you or your Render deployment.
+3. Once the project is created, go to the **Connection Details** panel and copy the connection string. It will look something like this:
+   ```
+   postgresql://username:password@your-neon-host.neon.tech/neondb?sslmode=require
+   ```
+4. Paste that entire string as the value of `DATABASE_URL` in your backend `.env` file for local development, and in your Render environment variables for production.
+
+That is all the database configuration you need to do. The backend takes care of creating the tables on startup. The first time you run the server and register a user, everything will just work.
+
+---
+
 ## How Everything Connects — From Your Browser to the Database
 
 This is probably the most important thing to understand before you start. The three layers of this application talk to each other in a very clean, predictable way. Here is the journey a request takes from the moment you click a button to the moment your data gets saved.
