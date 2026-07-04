@@ -1,97 +1,153 @@
-# FinRelief AI
-### AI-Powered Debt Settlement & Negotiation Platform
+# 🌟 FinRelief AI — Complete Setup & Deployment Guide
 
-FinRelief AI is a production-grade full-stack web application designed to help individuals understand their debt stress, simulate settlement options, and generate professional negotiation letters. It replaces the original proof-of-concept prototype with a modern, decoupled architecture: a pure FastAPI JSON API backend coupled with a React SPA frontend.
+Hello there! Welcome to **FinRelief AI** — an AI-powered debt settlement simulation and letter generator. This platform is designed to take the stress out of debt by showing users clear visual insights into their debt stress levels, modeling settlement options, and using Google Gemini AI to draft professional, personalized creditor communication.
 
-This application is built with a Cloud-first database layer (Neon PostgreSQL) and incorporates Google Gemini AI to draft context-specific creditor communication, backed by a robust offline template engine.
-
----
-
-## 🛠️ The Tech Stack
-
-### Backend (`/backend`)
-- **FastAPI:** Python ASGI web framework providing type-safe JSON endpoints.
-- **SQLAlchemy:** Modern database toolkit mapped to our PostgreSQL models.
-- **Neon Database:** Serverless PostgreSQL cloud instance for secure, durable data persistence.
-- **Google Gemini AI (`gemini-1.5-flash`):** Automates the drafting of custom negotiation letters.
-- **JWT Authentication:** Stateful token blacklist in-memory + bcrypt password hashing.
-- **ReportLab:** Generates on-the-fly professional PDFs for download.
-
-### Frontend (`/frontend`)
-- **React + Vite:** Superfast modern build toolchain and SPA architecture.
-- **Tailwind CSS (v4):** Core styling engine with a customized "warm editorial" design system.
-- **Recharts & inline SVGs:** Data visualization of DTI and stress-score histories.
-- **Axios:** Authenticated client with automatic request interception and 401 redirect logic.
+This guide walks you through the entire lifecycle of the project: from checking out the code on your local computer to putting it live in production on platforms like **Render** (for the backend) and **Vercel** (for the frontend). 
 
 ---
 
-## 🔑 Required Environment Variables (Names Only)
+## 🏗️ How It's Built
 
-To run the application locally or in production, you need to configure the following environment variables.
-
-### Backend (`/backend/.env`)
-- `DATABASE_URL`: Connection URI to your PostgreSQL instance.
-- `FINRELIEF_SECRET_KEY`: High-entropy hex string used for signing JWT access tokens.
-- `GEMINI_API_KEY`: Google AI Studio credentials for writing negotiation letters.
-- `FRONTEND_URL`: CORS configuration URL (points to Vite dev server locally, or your deployed Vercel URL in production).
-
-### Frontend (`/frontend/.env` or `.env.local`)
-- `VITE_API_URL`: Root path of your backend server (defaults to localhost:8000).
+To make the app super fast and easy to maintain, we've split it into two main pieces:
+1. **The Backend (`/backend`)**: A FastAPI JSON API written in Python. It handles database storage (via Neon PostgreSQL), security tokens, and communicates with Google Gemini AI to draft letters.
+2. **The Frontend (`/frontend`)**: A modern React web app built with Vite and Tailwind CSS. It draws graphs, manages dashboard cards, and provides a polished interface.
 
 ---
 
-## 💻 Local Development Setup
+## 💻 1. Local Development Setup
 
-Ensure you have Python 3.10+ and Node.js 18+ installed on your system.
+Let's get the application up and running on your local machine.
 
-### 1. Backend Setup
+### Prerequisites
+Make sure you have these installed:
+- **Node.js** (v18 or higher)
+- **Python** (v3.10 or higher)
 
-1. Open a terminal in the `/backend` folder:
+---
+
+### Step A: Clone the Code
+First, clone this repository to your machine and move into the project folder:
+```bash
+git clone https://github.com/Sridattasai18/Fin-Relief-AI.git
+cd Fin-Relief-AI
+```
+
+---
+
+### Step B: Run the Backend
+1. **Navigate into the backend folder**:
    ```bash
    cd backend
    ```
-2. Create your local environment file:
+2. **Create a virtual environment** to keep your dependencies separate:
    ```bash
-   cp .env.example .env
+   python -m venv .venv
    ```
-   *Edit `.env` to supply your database, secret key, and optional Gemini credentials.*
-3. Install dependencies:
+   *Activate it:*
+   - **Windows (PowerShell)**: `.venv\Scripts\Activate.ps1`
+   - **macOS / Linux**: `source .venv/bin/activate`
+
+3. **Install the Python packages**:
    ```bash
    pip install -r requirements.txt
    ```
-4. Start the FastAPI development server:
-   ```bash
-   uvicorn main:app --reload --port 8000
-   ```
 
-*The API documentation is accessible interactively at [http://localhost:8000/docs](http://localhost:8000/docs).*
-
-### 2. Frontend Setup
-
-1. Open a new terminal in the `/frontend` folder:
-   ```bash
-   cd frontend
-   ```
-2. Create your local environment file:
+4. **Set up your environment variables**:
+   Copy the example file to a new file named `.env`:
    ```bash
    cp .env.example .env
    ```
-   *By default, the Vite dev proxy matches http://localhost:8000 for local requests.*
-3. Install packages:
-   ```bash
-   npm install
-   ```
-4. Start the Vite hot-reloading dev server:
-   ```bash
-   npm run dev
-   ```
+   Open `.env` in your editor and fill in the values:
+   - `DATABASE_URL`: Your PostgreSQL connection string. (For local development, you can use a local database or a free tier on Neon DB).
+   - `FINRELIEF_SECRET_KEY`: A random hex string to sign login tokens. You can generate one with `python -c "import secrets; print(secrets.token_hex(32))"`.
+   - `GEMINI_API_KEY`: Your key from Google AI Studio. If left blank, the app will gracefully fall back to default text templates.
+   - `FRONTEND_URL`: Set this to `http://localhost:5173` (the local React dev server address) so the backend allows requests from the frontend.
 
-*Open your browser to [http://localhost:5173](http://localhost:5173) to see the application in action.*
+5. **Start the FastAPI server**:
+   ```bash
+   uvicorn main:app --reload --port 8000
+   ```
+   Your backend is now running at `http://localhost:8000`. You can visit `http://localhost:8000/docs` to see the interactive API docs!
 
 ---
 
-## 🚀 Deployed Demo
-*Live demo links (Render backend + Vercel frontend) will be added here shortly once the deployment pipeline completes.*
+### Step C: Run the Frontend
+1. **Open a new terminal window** (keep the backend terminal running), navigate back to the root, and go to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. **Install the packages**:
+   ```bash
+   npm install
+   ```
+3. **Configure the API endpoint**:
+   Copy the example environment file:
+   ```bash
+   cp .env.example .env
+   ```
+   Open `.env` and verify that `VITE_API_URL` points to your backend:
+   ```env
+   VITE_API_URL=http://localhost:8000
+   ```
+4. **Start the development server**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser to `http://localhost:5173` to see the application running locally!
+
+---
+
+## 🚀 2. Deploying to Production
+
+When you are ready to share your application with the world, we recommend using **Render** for the Python backend and **Vercel** for the React frontend. Here is how to set them up.
+
+### Deploying the Backend on Render
+Render is a wonderful, simple cloud platform for web services.
+
+1. Create a free account at [render.com](https://render.com).
+2. Click **New +** and select **Web Service**.
+3. Connect your GitHub repository.
+4. Fill in the configuration details:
+   - **Name**: `finrelief-backend`
+   - **Runtime**: `Python`
+   - **Root Directory**: `backend` *(This is important!)*
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+5. Scroll down to **Environment Variables** and add the following keys:
+   - `DATABASE_URL`: Your production PostgreSQL connection string (e.g. from Neon).
+   - `FINRELIEF_SECRET_KEY`: A secure random secret key.
+   - `GEMINI_API_KEY`: Your Google AI Studio API key.
+   - `FRONTEND_URL`: The URL of your Vercel frontend (you'll get this in the next step, but you can update it later).
+6. Click **Deploy Web Service**.
+
+Once deployed, Render will give you a public URL (e.g., `https://finrelief-backend.onrender.com`). Copy this URL!
+
+---
+
+### Deploying the Frontend on Vercel
+Vercel is the gold standard for hosting frontend single-page applications.
+
+1. Log into your account at [vercel.com](https://vercel.com).
+2. Click **Add New** > **Project** and import your GitHub repository.
+3. In the configuration settings:
+   - **Framework Preset**: Choose **Vite**.
+   - **Root Directory**: Select `frontend`.
+4. Click on **Environment Variables** and add:
+   - Name: `VITE_API_URL`
+   - Value: The URL of your deployed Render backend (e.g., `https://finrelief-backend.onrender.com`). Do not include a trailing slash.
+5. Click **Deploy**.
+
+Vercel will build your React application and provide you with a production URL (e.g., `https://finrelief-ai.vercel.app`).
+
+---
+
+### 🔗 Connecting the Frontend and Backend
+To ensure that security features work smoothly, go back to your **Render** dashboard for your backend service:
+1. Go to **Environment Variables**.
+2. Update the `FRONTEND_URL` variable to point to your new Vercel production URL (e.g., `https://finrelief-ai.vercel.app`).
+3. Save the changes. Render will automatically redeploy the backend with the new configuration.
+
+Now, your frontend can securely communicate with your backend database and Gemini AI services in production!
 
 ---
 
