@@ -2,6 +2,7 @@
 
 # ── Local-only files (prototypes, analysis, dev docs) ─────────────────────────
 _local-only/
+LOCAL_SETUP_GUIDE.md
 
 # ── Secrets & environment ─────────────────────────────────────────────────────
 .env
