@@ -1,12 +1,12 @@
-# 🌟 FinRelief AI — Complete Setup & Deployment Guide
+# FinRelief AI — Complete Setup & Deployment Guide
 
-Hello there! Welcome to **FinRelief AI** — an AI-powered debt settlement simulation and letter generator. This platform is designed to take the stress out of debt by showing users clear visual insights into their debt stress levels, modeling settlement options, and using Google Gemini AI to draft professional, personalized creditor communication.
+Hello there! Welcome to FinRelief AI — an AI-powered debt settlement simulation and letter generator. This platform is designed to take the stress out of debt by showing users clear visual insights into their debt stress levels, modeling settlement options, and using Google Gemini AI to draft professional, personalized creditor communication.
 
-This guide walks you through the entire lifecycle of the project: from checking out the code on your local computer to putting it live in production on platforms like **Render** (for the backend) and **Vercel** (for the frontend). 
+This guide walks you through the entire lifecycle of the project: from checking out the code on your local computer to putting it live in production on platforms like Render (for the backend) and Vercel (for the frontend). 
 
 ---
 
-## 🏗️ How It's Built
+## How It's Built
 
 To make the app super fast and easy to maintain, we've split it into two main pieces:
 1. **The Backend (`/backend`)**: A FastAPI JSON API written in Python. It handles database storage (via Neon PostgreSQL), security tokens, and communicates with Google Gemini AI to draft letters.
@@ -14,9 +14,9 @@ To make the app super fast and easy to maintain, we've split it into two main pi
 
 ---
 
-## 💻 1. Local Development Setup
+## 1. Local Development Setup
 
-Let's get the application up and running on your local machine.
+Let's get the application up and replacing on your local machine.
 
 ### Prerequisites
 Make sure you have these installed:
@@ -97,9 +97,9 @@ cd Fin-Relief-AI
 
 ---
 
-## 🚀 2. Deploying to Production
+## 2. Deploying to Production
 
-When you are ready to share your application with the world, we recommend using **Render** for the Python backend and **Vercel** for the React frontend. Here is how to set them up.
+When you are ready to share your application with the world, we recommend using Render for the Python backend and Vercel for the React frontend. Here is how to set them up.
 
 ### Deploying the Backend on Render
 Render is a wonderful, simple cloud platform for web services.
@@ -141,8 +141,8 @@ Vercel will build your React application and provide you with a production URL (
 
 ---
 
-### 🔗 Connecting the Frontend and Backend
-To ensure that security features work smoothly, go back to your **Render** dashboard for your backend service:
+### Connecting the Frontend and Backend
+To ensure that security features work smoothly, go back to your Render dashboard for your backend service:
 1. Go to **Environment Variables**.
 2. Update the `FRONTEND_URL` variable to point to your new Vercel production URL (e.g., `https://finrelief-ai.vercel.app`).
 3. Save the changes. Render will automatically redeploy the backend with the new configuration.
@@ -151,5 +151,5 @@ Now, your frontend can securely communicate with your backend database and Gemin
 
 ---
 
-## 📝 Disclaimer
+## Disclaimer
 FinRelief AI is created for educational and informational purposes. The metrics and recommendation models do not constitute professional financial or legal counsel. Consult a qualified advisor before negotiating with creditors.
