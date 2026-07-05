@@ -1,16 +1,77 @@
-# React + Vite
+# FinRelief AI — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The frontend for FinRelief AI, built with React 19, Vite 8, and Tailwind CSS v4.
 
-Currently, two official plugins are available:
+For full project setup and deployment instructions, see the [root README](../README.md) and [Setup & Deployment Guide](../SETUP_AND_DEPLOYMENT.md).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Tool | Version | Role |
+|---|---|---|
+| React | 19 | UI framework |
+| Vite | 8 | Build tool + dev server |
+| Tailwind CSS | v4 | Styling via `@theme` design tokens |
+| React Router | 7 | Client-side routing |
+| Recharts | 3 | Dashboard trend charts |
+| Axios | 1 | HTTP client with JWT interceptor |
+| Lucide React | latest | Icons |
+| oxlint | latest | Linting |
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Pages
+
+| Route | Component | Description |
+|---|---|---|
+| `/login` | `features/auth/Login` | Email/password login + one-click demo |
+| `/register` | `features/auth/Register` | Create account |
+| `/dashboard` | `features/dashboard/Dashboard` | KPI cards, debt trend charts, letter count |
+| `/loans` | `features/loans/Loans` | Add, edit, delete loans |
+| `/settlement` | `features/settlement/Settlement` | Run settlement simulation on a loan |
+| `/letters` | `features/letters/Letters` | Generate, edit, version, and download OTS letters |
+
+All authenticated routes render inside `AppShell` (sidebar on desktop, top bar + bottom nav on mobile).
+
+---
+
+## Design System
+
+Design tokens are defined as Tailwind v4 `@theme` variables in `src/index.css`. The palette is a warm parchment/ink theme:
+
+| Token | Value | Role |
+|---|---|---|
+| `--color-cream` | `#F4F1E8` | Page background |
+| `--color-ink` | `#1B1A17` | Primary text |
+| `--color-surface` | `#EFECE2` | Card and sidebar tints |
+| `--color-amber` | `#B8622B` | Primary CTA, active nav, brand accent |
+| `--color-green` | `#3E6B4F` | Healthy / low-stress states |
+| `--color-danger` | `#B23A3A` | Error and critical states |
+| `--color-info` | `#2B5CB8` | AI badge and info states |
+
+Typography: **Fraunces** (serif, headings) + **Inter** (sans-serif, body).
+
+---
+
+## Running Locally
+
+```bash
+npm install
+cp .env.example .env
+# set VITE_API_URL=http://localhost:8000
+npm run dev
+```
+
+Open `http://localhost:5173`.
+
+---
+
+## Available Scripts
+
+| Script | Command | Description |
+|---|---|---|
+| Dev server | `npm run dev` | Starts Vite dev server with HMR |
+| Build | `npm run build` | Production build to `dist/` |
+| Preview | `npm run preview` | Preview the production build locally |
+| Lint | `npm run lint` | Run oxlint |

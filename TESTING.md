@@ -2,53 +2,130 @@
 
 ## Overview
 
-The backend test suite covers the settlement calculation logic — the financial math that directly affects users' debt settlement numbers. There are 36 tests split across two files.
+The backend test suite covers settlement calculation logic, Gemini AI fallback behaviour, and settlement API endpoints. There are **65 tests** across three files.
 
 ## What's Covered
 
-**`backend/tests/test_calculations.py`** — Pure unit tests for `utils/calculations.py`:
-- `compute_stress_level`: all boundary values (Low/Medium/High/Critical thresholds)
-- `compute_settlement_metrics`: realistic cases (Arjun Mehta persona), edge cases including zero income, zero EMI, overdue days capping at 180, stress score clamping at 0 and 100, large (millions-scale) values, and verification that `settlement_amount` uses the unrounded internal percentage
+### `backend/tests/test_calculations.py` — Pure unit tests for `utils/calculations.py`
 
-**`backend/tests/test_settlement_api.py`** — Integration tests for the settlement API:
-- `POST /settlement/{loan_id}`: auth required, 404 on missing/other-user loans, correct response shape and verified math, snapshot auto-creation, 5-minute deduplication window
-- `GET /snapshots`: auth required, empty initially, populated after settlement, correct shape, user isolation
-- `GET /snapshots/{loan_id}`: auth required, 404 on missing loan, correct results per loan
+**`TestComputeStressLevel`** — 8 boundary tests:
+- Verifies the correct label (Low / Medium / High / Critical) at each threshold: 0, 25, 25.1, 50, 50.1, 75, 75.1, 100
+
+**`TestComputeSettlementMetricsRealistic`** — 3 realistic persona cases:
+- Arjun Mehta (standard case with hand-verified numbers)
+- Explicit monthly expenses provided
+- Negative surplus / critical stress
+
+**`TestComputeSettlementMetricsEdgeCases`** — 10 edge cases:
+- Zero overdue days
+- Zero income guard (avoids division by zero)
+- Zero EMI guard
+- Overdue days capped at 180
+- Stress score clamped at 100
+- Stress score floored at 0
+- Large (millions-scale) values with no overflow
+- Default expenses equals explicit 40% of income
+- Months to clear minimum of 1
+- Settlement amount uses the rounded settlement percentage (consistent with what the UI displays)
+
+---
+
+### `backend/tests/test_gemini_fallback.py` — Unit tests for all Gemini failure scenarios
+
+All tests mock `_client` — no real API calls are made.
+
+**`TestGeminiHappyPath`** — 2 tests:
+- Successful Gemini response returns `source: "gemini"`
+- Returned text is not the fallback template
+
+**`TestScenarioAQuota`** — 2 tests: daily quota exhausted (429), per-minute rate limit (429)
+
+**`TestScenarioBAuth`** — 2 tests: invalid key (401), revoked key (403)
+
+**`TestScenarioCNetwork`** — 3 tests: timeout, connect error, read timeout
+
+**`TestScenarioDEmpty`** — 3 tests: None text, whitespace-only text, no candidates in response
+
+**`TestScenarioESafety`** — 6 tests: parametrized across SAFETY, BLOCKLIST, PROHIBITED_CONTENT, SPII, RECITATION, LANGUAGE finish reasons
+
+**`TestScenarioFMalformed`** — 3 tests: AttributeError, RuntimeError, ValueError from the SDK
+
+**`TestScenarioGTruncated`** — 1 test: MAX_TOKENS finish reason falls back to template
+
+**`TestScenarioHTimeout`** — 2 tests: connect timeout, pool timeout
+
+**`TestFallbackTemplateQuality`** — 5 tests:
+- Template contains correct borrower name, lender, Rs. amounts, structural elements (OTS, 15 working days, credit bureau, Settled)
+- Settlement amount in the template is consistent with the rounded settlement percentage
+- Figures are consistent for small amounts
+- No Gemini client always uses fallback
+- 500 server error falls back to template
+
+---
+
+### `backend/tests/test_settlement_api.py` — Integration tests for settlement endpoints
+
+**`TestSettlementCalculate`** — 7 tests:
+- Auth required
+- 404 for missing loan
+- 404 for another user's loan
+- Correct response shape
+- Hand-verified math (Arjun Mehta case)
+- Snapshot auto-created after settlement
+- 5-minute deduplication window
+
+**`TestSnapshotsList`** — 5 tests:
+- Auth required
+- Empty initially
+- Populated after settlement
+- Correct snapshot shape
+- User isolation (only own snapshots returned)
+
+**`TestSnapshotsByLoan`** — 3 tests:
+- Auth required
+- 404 for missing loan
+- Returns correct snapshots for the specified loan
+
+---
 
 ## Test Database
 
-Tests use an isolated SQLite database (`backend/tests/test_finrelief.db`). It is created fresh before each test and dropped after — the real Neon/PostgreSQL database is never touched. The rate limiter is disabled during integration tests (it has its own manual verification from the rate-limiting PR).
+Tests use an isolated SQLite database (`backend/tests/test_finrelief.db`). It is fully dropped and recreated before each test via an `autouse` fixture — the real Neon PostgreSQL database is never touched. The rate limiter is also disabled during tests.
+
+---
 
 ## Setup
 
-Dependencies are already in `backend/requirements.txt`. To install:
+Dependencies are already in `backend/requirements.txt`. Install them:
 
 ```bash
-cd Fin-track-prototype
-.venv\Scripts\pip install -r backend/requirements.txt
+pip install -r backend/requirements.txt
 ```
 
+---
+
 ## Running Tests
+
+From the repo root:
+
+```bash
+python -m pytest backend/tests/ -v
+```
 
 From the backend directory:
 
 ```bash
-cd Fin-track-prototype/backend
-..\.venv\Scripts\pytest tests/ -v
+python -m pytest tests/ -v
 ```
 
-Or from the repo root:
+Expected output: **65 passed** with no failures (deprecation warnings from Pydantic v2 and FastAPI's `on_event` are expected and do not affect functionality).
 
-```bash
-cd Fin-track-prototype
-.venv\Scripts\pytest backend/tests/ -v
-```
-
-Expected output: `36 passed` with no failures.
+---
 
 ## Adding New Tests
 
 - Unit tests for pure functions go in `test_calculations.py`
-- API endpoint tests go in `test_settlement_api.py` (or a new `test_<router>.py` file)
+- Gemini client failure scenarios go in `test_gemini_fallback.py`
+- API endpoint tests go in `test_settlement_api.py` or a new `test_<router>.py` file
 - Use the `client`, `auth_headers`, and `test_loan` fixtures from `conftest.py`
 - Always hand-verify expected values against the formula — do not assert `result == function(input)` without an independent calculation
