@@ -35,6 +35,9 @@ def compute_settlement_metrics(
     )
     
     settle_pct = min(70.0, max(20.0, 25.0 + (stress_score * 0.35)))
+    # Round once — both the displayed percentage and the rupee amount derive
+    # from the same value so a user can verify: amount × pct% = settlement_amount.
+    settle_pct_rounded = round(settle_pct, 1)
     stress_level = compute_stress_level(stress_score)
     
     # Months to clear debt remaining
@@ -45,8 +48,8 @@ def compute_settlement_metrics(
         "monthly_surplus": round(surplus, 2),
         "stress_score": round(stress_score, 1),
         "stress_level": stress_level,
-        "settlement_percentage": round(settle_pct, 1),
-        "settlement_amount": round(amount * settle_pct / 100.0, 2),
+        "settlement_percentage": settle_pct_rounded,
+        "settlement_amount": round(amount * settle_pct_rounded / 100.0, 2),
         "outstanding_amount": amount,
         "months_to_clear_debt": max(1, months_to_clear)
     }

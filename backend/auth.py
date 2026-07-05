@@ -1,7 +1,7 @@
 import os
 import datetime
 from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
@@ -10,6 +10,7 @@ import bcrypt
 from database import get_db
 from models import User
 from schemas import UserRegister, UserLogin, TokenOut, UserOut
+from limiter import limiter
 
 # JWT Config
 SECRET_KEY = os.environ.get("FINRELIEF_SECRET_KEY", "dev-only-secret-change-me")
@@ -62,7 +63,8 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/register", response_model=TokenOut, status_code=201)
-def register(payload: UserRegister, db: Session = Depends(get_db)):
+@limiter.limit("3/minute")
+def register(request: Request, payload: UserRegister, db: Session = Depends(get_db)):
     existing = db.query(User).filter(User.email == payload.email).first()
     if existing:
         raise HTTPException(
@@ -84,7 +86,8 @@ def register(payload: UserRegister, db: Session = Depends(get_db)):
     }
 
 @router.post("/login", response_model=TokenOut)
-def login(payload: UserLogin, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+def login(request: Request, payload: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == payload.email).first()
     if not user or not verify_password(payload.password, user.hashed_password):
         raise HTTPException(

@@ -1,10 +1,19 @@
+# Root requirements.txt — mirrors backend/requirements.txt
+# Render uses backend/requirements.txt directly (rootDir: backend),
+# but this file is kept in sync for local dev convenience.
 fastapi
 uvicorn[standard]
 sqlalchemy>=2.0
+psycopg2-binary
 bcrypt
 python-jose[cryptography]
 python-multipart
 email-validator
 pydantic[email]
-google-generativeai
+google-genai
+reportlab
+python-dotenv
+slowapi
+pytest
+httpx
 aiofiles

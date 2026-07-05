@@ -5,6 +5,10 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.errors import RateLimitExceeded
+from limiter import limiter
 
 from database import engine, Base
 from auth import router as auth_router
@@ -24,6 +28,7 @@ app = FastAPI(
     version="3.0.0",
     description="Backend JSON API for the FinRelief AI Debt Settlement platform"
 )
+app.state.limiter = limiter
 
 # Startup verification & migration
 @app.on_event("startup")
@@ -50,6 +55,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(SlowAPIMiddleware)
 
 # Include Routers
 app.include_router(auth_router)
@@ -83,6 +89,10 @@ def http_exception_handler(request: Request, exc: StarletteHTTPException):
         status_code=exc.status_code,
         content={"detail": exc.detail}
     )
+
+@app.exception_handler(RateLimitExceeded)
+def rate_limit_handler(request: Request, exc: RateLimitExceeded):
+    return _rate_limit_exceeded_handler(request, exc)
 
 @app.exception_handler(Exception)
 def general_exception_handler(request: Request, exc: Exception):
