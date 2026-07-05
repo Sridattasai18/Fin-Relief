@@ -11,11 +11,9 @@ import {
 } from 'recharts'
 import client from '../../api/client'
 import Badge from '../../components/ui/Badge'
-import Spinner from '../../components/ui/Spinner'
 import Button from '../../components/ui/Button'
 import PageHeader from '../../components/ui/PageHeader'
 import MetricCard from '../../components/ui/MetricCard'
-import SectionCard from '../../components/ui/SectionCard'
 import { stressLabel, stressColor } from '../../utils/stress'
 
 /* ── Formatters ──────────────────────────────────────────────── */

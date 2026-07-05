@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from sqlalchemy import func
 
 from database import get_db
 from models import Loan, User, Letter
@@ -34,27 +33,27 @@ def get_dashboard_summary(
             "letter_count": 0
         }
 
-    total_debt = sum(l.amount for l in loans)
-    total_emi = sum(l.emi for l in loans)
+    total_debt = sum(loan.amount for loan in loans)
+    total_emi = sum(loan.emi for loan in loans)
     
     # Compute per-loan metrics
     metrics_list = []
-    for l in loans:
+    for loan in loans:
         m = compute_settlement_metrics(
-            income=l.income,
-            emi=l.emi,
-            overdue_days=l.overdue_days,
-            amount=l.amount,
-            monthly_expenses=l.monthly_expenses
+            income=loan.income,
+            emi=loan.emi,
+            overdue_days=loan.overdue_days,
+            amount=loan.amount,
+            monthly_expenses=loan.monthly_expenses
         )
-        metrics_list.append((l, m))
+        metrics_list.append((loan, m))
 
-    avg_dti = sum(m["dti_ratio"] for l, m in metrics_list) / len(metrics_list)
-    overall_stress = sum(m["stress_score"] for l, m in metrics_list) / len(metrics_list)
-    recommended_settlement_pct = sum(m["settlement_percentage"] for l, m in metrics_list) / len(metrics_list)
+    avg_dti = sum(m["dti_ratio"] for _loan, m in metrics_list) / len(metrics_list)
+    overall_stress = sum(m["stress_score"] for _loan, m in metrics_list) / len(metrics_list)
+    recommended_settlement_pct = sum(m["settlement_percentage"] for _loan, m in metrics_list) / len(metrics_list)
 
     # Determine monthly surplus using the loan with the highest income as the proxy
-    loan_with_max_income = max(loans, key=lambda l: l.income)
+    loan_with_max_income = max(loans, key=lambda ln: ln.income)
     max_income = loan_with_max_income.income
     
     expenses_value = (

@@ -67,7 +67,7 @@ def validation_exception_handler(request: Request, exc: RequestValidationError):
     # Construct a clean single-string detail message from the list of validation errors
     error_msgs = []
     for err in errors:
-        loc = " -> ".join(str(l) for l in err.get("loc", []))
+        loc = " -> ".join(str(loc_part) for loc_part in err.get("loc", []))
         msg = err.get("msg", "Validation error")
         error_msgs.append(f"{loc}: {msg}")
     

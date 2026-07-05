@@ -7,7 +7,7 @@ import Button from '../../components/ui/Button'
 import Spinner from '../../components/ui/Spinner'
 import PageHeader from '../../components/ui/PageHeader'
 import EmptyState from '../../components/ui/EmptyState'
-import { useToast } from '../../context/ToastContext'
+import { useToast } from '../../context/useToast'
 import { stressLabel, stressColor } from '../../utils/stress'
 
 /* ── Animation helpers ──────────────────────────────────────── */
@@ -75,7 +75,6 @@ function computeMetrics(income, emi, overdue_days, amount, monthly_expenses) {
 
 function dtiStatus(v)    { return v < 35 ? 'healthy' : v < 55 ? 'tight' : 'high' }
 function surplusStatus(v){ return v > 5000 ? 'healthy' : v >= 0 ? 'tight' : 'critical' }
-function stressStatus(v) { return v <= 25 ? 'healthy' : v <= 60 ? 'tight' : 'high' }
 function overdueStatus(v){ return v === 0 ? 'healthy' : v <= 30 ? 'tight' : 'high' }
 
 /* ── Live Slider + Input Row ── */

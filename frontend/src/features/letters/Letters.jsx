@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Copy, Check, Download, RefreshCw, FileText, ChevronRight, Edit2, Save, HelpCircle } from 'lucide-react'
 import client from '../../api/client'
@@ -8,7 +8,7 @@ import Spinner from '../../components/ui/Spinner'
 import PageHeader from '../../components/ui/PageHeader'
 import EmptyState from '../../components/ui/EmptyState'
 import Modal from '../../components/ui/Modal'
-import { useToast } from '../../context/ToastContext'
+import { useToast } from '../../context/useToast'
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const fmtDate = (iso) =>
@@ -99,7 +99,6 @@ export default function Letters() {
   const [borrowerName, setBorrowerName] = useState('')
   const [accountNumber, setAccountNumber] = useState('XXXX-XXXX-1234')
   const [subject, setSubject] = useState('')
-  const [settlementPct, setSettlementPct] = useState('')
   const [paymentWindow, setPaymentWindow] = useState('15 days')
 
   // Modals
@@ -119,7 +118,6 @@ export default function Letters() {
         setBorrowerName(localStorage.getItem('finrelief_user') ? JSON.parse(localStorage.getItem('finrelief_user')).name : '')
         // Default subjects
         setSubject(`Proposal for One-Time Settlement (OTS) - Account: ${accountNumber}`)
-        setSettlementPct(Math.round(target.settlement_pct))
       }
     } catch (err) {
       setError(err.response?.data?.detail || 'Could not load letters.')
@@ -139,7 +137,6 @@ export default function Letters() {
     setSelectedId(l.id)
     const cleaned = applyPlaceholderFixes(l.letter_text)
     setEditedText(cleaned)
-    setSettlementPct(Math.round(l.settlement_pct))
     setHasUnsavedEdits(false)
     setIsEditMode(false)
   }

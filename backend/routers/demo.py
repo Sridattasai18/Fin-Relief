@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -59,7 +59,7 @@ def seed_demo_data(
     db.commit()
 
     # Refresh instances
-    for l in sample_loans:
-        db.refresh(l)
+    for loan in sample_loans:
+        db.refresh(loan)
         
     return sample_loans
