@@ -1,50 +1,67 @@
-# FinRelief AI
+# FinRelief AI — AI-Powered Debt Relief & Financial Recovery Platform
 
 For instructions on how to clone, configure, and run this project locally, or how to deploy it on Render and Vercel, see the [Setup and Deployment Guide](SETUP_AND_DEPLOYMENT.md).
 
 ---
 
-FinRelief AI is a web application built to help people who are struggling with debt. Most debt management tools either overwhelm you with jargon or give you generic advice that doesn't reflect your actual situation. FinRelief AI takes a different approach — it looks at your real numbers, shows you exactly where you stand, and helps you take action.
+> **SmartBridge Internship Project**
+> Built by a team of 5 as part of the SmartBridge Externship Program.
+>
+> **Team Members:**
+> - Bhoganaduni Manogna
+> - Sri Datta Sai Vithal Kaligotla
+> - Jayasree Movva
+> - Sri Satya Lahari Pragada
+> - Krishna Sanjay Pemmaraju
 
 ---
 
-## What It Does
+## About
 
-When you sign up and add your loan details, FinRelief AI does three things for you.
+FinRelief AI is an intelligent, AI-powered web application that helps people struggling with loan payments figure out a realistic settlement amount and uses AI to write a professional negotiation letter to their bank — turning financial stress into an actionable plan.
 
-**It calculates your debt stress.** Using your income, EMI amounts, overdue status, and monthly expenses, the platform computes a debt-to-income ratio and a debt stress score. These numbers tell you, in plain terms, how much financial pressure you are under — whether that is Low, Medium, High, or Critical. It also estimates how long it will take you to clear your debt at your current pace and how much monthly surplus you have to work with.
+Most debt management tools either overwhelm you with jargon or give you generic advice that doesn't reflect your actual situation. FinRelief AI takes a different approach: it looks at your real numbers, shows you exactly where you stand, and helps you take action.
 
-**It simulates a settlement.** Based on your stress score and overdue days, the app models a realistic One Time Settlement percentage — the proportion of your outstanding balance that a creditor might realistically agree to settle for. This gives you a concrete starting point before you ever speak to a bank or lender.
+---
 
-**It writes your negotiation letter.** This is where Google Gemini AI comes in. The platform uses your loan details, the simulated settlement amount, and your personal situation to draft a professional, empathetic OTS (One Time Settlement) letter addressed to your creditor's recovery department. If Gemini is unavailable, over quota, or not configured, the app falls back to a built-in professional template that is equally usable — the `source` field in every letter response tells you which one was used.
+## Core Scenarios
+
+The platform is built around three core scenarios:
+
+**Scenario 1 — AI-Powered Settlement Recommendation**
+Analyzes your financial profile (loan details, EMI, overdue duration, monthly income) to compute a personalized debt stress score, debt-to-income ratio, and a realistic One Time Settlement (OTS) percentage — a concrete starting point before you ever speak to your bank.
+
+**Scenario 2 — Intelligent Negotiation Letter Generation**
+Uses Google Gemini AI to generate a professional, lender-specific OTS negotiation letter based on your financial standing. If Gemini is unavailable or over quota, the app falls back to a built-in professional template automatically — you always get a usable letter.
+
+**Scenario 3 — Financial Health Tracking & Loan Analysis**
+A dashboard that tracks monthly surplus, DTI ratio, debt stress levels, and settlement percentages over time, alongside your full AI negotiation letter history.
 
 ---
 
 ## How It Helps
 
-Negotiating debt on your own is intimidating. Most people don't know what a realistic settlement looks like, and they certainly don't know how to put one in writing. FinRelief AI removes both of those barriers.
+Negotiating debt on your own is intimidating. Most people don't know what a realistic settlement looks like, and they don't know how to put one in writing. FinRelief AI removes both barriers.
 
-By the time you walk into a conversation with your bank, you already know your numbers, you have a defensible settlement figure, and you have a professionally written letter in your hand. That changes the dynamic entirely.
-
-The dashboard also tracks your stress score over time. So as you pay down debt or your income changes, you can see that progress reflected in your metrics rather than just feeling like you are spinning your wheels.
+By the time you walk into a conversation with your bank, you already know your numbers, you have a defensible settlement figure, and you have a professionally written letter in hand. The dashboard also tracks your stress score over time so you can see real progress as your situation changes.
 
 ---
 
 ## Who It Is For
 
-This application is designed for individuals in India dealing with personal loans, credit card debt, or other consumer lending products who are finding regular repayments difficult. It is particularly useful for anyone who is already overdue on payments and is considering approaching their lender for a settlement.
+Individuals in India dealing with personal loans, credit card debt, or other consumer lending products who are finding regular repayments difficult — particularly anyone already overdue and considering approaching their lender for a settlement.
 
 ---
 
-## How It Is Built
+## Project Metrics
 
-The application is split into two parts that communicate over a standard REST API.
-
-The backend is a Python API built with FastAPI. It handles everything that requires security or computation: user authentication with JWT tokens, debt stress calculations, Gemini AI integration, PDF generation via ReportLab, and all database reads and writes. The database is a Neon serverless PostgreSQL instance, with SQLite used for the test suite.
-
-The frontend is a React single-page application built with Vite and styled with Tailwind CSS v4. It renders dashboard charts using Recharts, manages authenticated API calls through Axios, and provides the full user interface for adding loans, viewing metrics, simulating settlements, and generating and downloading OTS letters as PDFs.
-
-The two are completely decoupled. The frontend only ever talks to the backend through JSON API calls. The backend never serves HTML. This architecture makes it straightforward to deploy them independently — the backend on Render and the frontend on Vercel — and scale either one without touching the other.
+| | |
+|---|---|
+| Epics | 10 |
+| Stories | 26 |
+| Tech stack layers | 6 |
+| API endpoints | 21 |
+| Test cases | 68 |
 
 ---
 
@@ -70,13 +87,25 @@ The two are completely decoupled. The frontend only ever talks to the backend th
 
 ---
 
+## How It Is Built
+
+The application is split into two completely decoupled services that communicate over a standard REST API.
+
+The **backend** is a Python API built with FastAPI. It handles authentication with JWT tokens, debt stress calculations, Gemini AI integration, PDF generation via ReportLab, and all database reads and writes. The production database is Neon serverless PostgreSQL; SQLite is used for the isolated test suite.
+
+The **frontend** is a React SPA built with Vite and styled with Tailwind CSS v4. It renders dashboard trend charts using Recharts, manages authenticated API calls through Axios, and provides the full UI for adding loans, viewing metrics, simulating settlements, and generating and downloading OTS letters as PDFs.
+
+The frontend only ever talks to the backend through JSON API calls — the backend never serves HTML. This makes it straightforward to deploy them independently (backend on Render, frontend on Vercel) and scale either one without touching the other.
+
+---
+
 ## Pages
 
 | Route | Page | What it does |
 |---|---|---|
 | `/login` | Login | Email/password login + one-click demo account |
 | `/register` | Register | Create a new account |
-| `/dashboard` | Dashboard | Aggregate KPIs, stress trend charts, letter count |
+| `/dashboard` | Dashboard | Aggregate KPIs, stress trend charts, letter history |
 | `/loans` | Loans | Full CRUD for your loans |
 | `/settlement` | Settlement | Run a settlement simulation on any loan |
 | `/letters` | Letters | Generate, edit, and download OTS letters as PDFs |
@@ -111,14 +140,25 @@ The two are completely decoupled. The frontend only ever talks to the backend th
 
 ---
 
+## Milestones
+
+1. **Environment Setup & Dependency Configuration** — Python 3.11+, React + Vite, FastAPI, SQLite & SQLAlchemy, Google Gemini API
+2. **AI Integration & Financial Processing** — Financial health calculation, DTI analysis, settlement prediction, AI negotiation strategies, letter generation
+3. **Core Backend Development** — FastAPI services for authentication, user management, loan management, financial analysis, and settlement prediction
+4. **Database Management & Data Persistence** — Storage for users, loans, settlement records, stress snapshots, and AI-generated letter history
+5. **Frontend UI Development** — Responsive dashboard with login/registration, financial dashboard, settlement predictor, and AI letter generator
+6. **Testing, Optimization & Deployment** — Validation, security testing, optimization, and deployment to Render + Vercel
+
+---
+
 ## Setup and Deployment
 
-For instructions on how to clone, configure, and run this project locally, or how to deploy it on Render and Vercel, see the [Setup and Deployment Guide](SETUP_AND_DEPLOYMENT.md).
+For full local setup and production deployment instructions, see the [Setup and Deployment Guide](SETUP_AND_DEPLOYMENT.md).
 
-For the test suite, see the [Testing Guide](TESTING.md).
+For the test suite breakdown, see the [Testing Guide](TESTING.md).
 
 ---
 
 ## Disclaimer
 
-FinRelief AI is created for educational and informational purposes. The metrics and recommendation models do not constitute professional financial or legal counsel. Consult a qualified advisor before negotiating with creditors.
+FinRelief AI is created for educational and informational purposes as part of the SmartBridge Internship Program. The metrics and recommendation models do not constitute professional financial or legal counsel. Consult a qualified advisor before negotiating with creditors.
