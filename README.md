@@ -9,7 +9,7 @@ For instructions on how to clone, configure, and run this project locally, or ho
 >
 > **Team Members:**
 > - Bhoganaduni Manogna
-> - Sri Datta Sai Vithal Kaligotla
+> - Sri Datta Sai Vithal Kaligotla -Lead
 > - Jayasree Movva
 > - Sri Satya Lahari Pragada
 > - Krishna Sanjay Pemmaraju
