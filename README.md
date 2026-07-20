@@ -1,5 +1,11 @@
 # FinRelief — AI Powered Debt Relief & Financial Recovery Platform
 
+[![Demo Video](https://img.shields.io/badge/YouTube-Demo%20Video-red?logo=youtube)](https://youtu.be/w77PZSuSgfs?si=72TfWTxegi1YfCsB)
+[![GitHub Repository](https://img.shields.io/badge/GitHub-Repository-black?logo=github)](https://github.com/Sridattasai18/Fin-Relief)
+
+* **Demo Video:** [https://youtu.be/w77PZSuSgfs?si=72TfWTxegi1YfCsB](https://youtu.be/w77PZSuSgfs?si=72TfWTxegi1YfCsB)
+* **GitHub Repository:** [https://github.com/Sridattasai18/Fin-Relief](https://github.com/Sridattasai18/Fin-Relief)
+
 For instructions on how to clone, configure, and run this project locally, or how to deploy it on Render and Vercel, see the [Setup and Deployment Guide](SETUP_AND_DEPLOYMENT.md).
 
 ---
@@ -21,6 +27,39 @@ For instructions on how to clone, configure, and run this project locally, or ho
 FinRelief AI is an intelligent, AI-powered web application that helps people struggling with loan payments figure out a realistic settlement amount and uses AI to write a professional negotiation letter to their bank — turning financial stress into an actionable plan.
 
 Most debt management tools either overwhelm you with jargon or give you generic advice that doesn't reflect your actual situation. FinRelief AI takes a different approach: it looks at your real numbers, shows you exactly where you stand, and helps you take action.
+
+---
+
+## Project Documentation
+
+Comprehensive project documentation is organized by development phase in the [`docs/`](docs/) directory:
+
+### Phase Documentation
+
+| Phase | Document | PDF | DOCX |
+|---|---|---|---|
+| **1. Ideation** | Define Problem Statements | [PDF](<docs/1. Brainstorming & Ideation/Define Problem Statements.pdf>) | — |
+| **2. Requirements** | Technology Stack | [PDF](<docs/2. Requirement Analysis/Technology Stack.pdf>) | — |
+| **3. Design** | Solution Architecture | [PDF](<docs/3. Project Design Phase/Solution Architecture.pdf>) | — |
+| **4. Planning** | Project Planning Template | [PDF](<docs/4. Project Planning Phase/Project Planning Template.pdf>) | — |
+| **5. Development** | Code-Layout, Readability and Reusability | [PDF](<docs/5. Project Development Phase/Code-Layout, Readability and Reusability.pdf>) | — |
+| **5. Development** | Coding & Solution | [PDF](<docs/5. Project Development Phase/Coding & Solution.pdf>) | — |
+| **5. Development** | No. of Functional Features Included in the Solution | [PDF](<docs/5. Project Development Phase/No. of Functional Features Included in the Solution.pdf>) | — |
+| **6. Testing** | Performance Testing | [PDF](<docs/6. Project Testing/Performance Testing.pdf>) | — |
+| **7. Core Docs** | Project Blueprint | [PDF](<docs/7. Project Documentation/Project Blueprint.pdf>) | [DOCX](<docs/7. Project Documentation/Project Blueprint.docx>) |
+| **7. Core Docs** | Architecture | [PDF](<docs/7. Project Documentation/Architecture.pdf>) | [DOCX](<docs/7. Project Documentation/Architecture.docx>) |
+| **7. Core Docs** | API Documentation | [PDF](<docs/7. Project Documentation/API Documentation.pdf>) | [DOCX](<docs/7. Project Documentation/API Documentation.docx>) |
+| **7. Core Docs** | Development Guide | [PDF](<docs/7. Project Documentation/Development Guide.pdf>) | [DOCX](<docs/7. Project Documentation/Development Guide.docx>) |
+| **7. Core Docs** | Feature Overview | [PDF](<docs/7. Project Documentation/Feature Overview.pdf>) | [DOCX](<docs/7. Project Documentation/Feature Overview.docx>) |
+| **8. Demonstration** | Team Involvement in Demonstration | [PDF](<docs/8. Project Demonstration/Team Involvement in Demonstration.pdf>) | — |
+
+### UI Screenshots
+Reference UI screenshots are available in [`docs/Screenshots/`](docs/Screenshots/):
+* 📊 [Dashboard Screen](docs/Screenshots/Dashboard.png)
+* 💳 [Loans Management](docs/Screenshots/My-loans.png)
+* ⚖️ [Settlement Simulator](docs/Screenshots/Settlement.png)
+* 📜 [Letters History](docs/Screenshots/letters.png)
+* 🔑 [Login Screen](docs/Screenshots/login%20page.png)
 
 ---
 

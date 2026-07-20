@@ -1,41 +1,48 @@
-# FinRelief AI — gitignore
-
-# ── Local-only files (prototypes, analysis, dev docs) ─────────────────────────
-_local-only/
-LOCAL_SETUP_GUIDE.md
-
-# ── Secrets & environment ─────────────────────────────────────────────────────
+# ── Environment secrets ──────────────────────────
 .env
-*.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env
+!*.env.example
 
-# ── Database (auto-created on first run, don't commit real user data) ─────────
-finrelief.db
-*.db
-*.sqlite3
-
-# ── Python ────────────────────────────────────────────────────────────────────
-__pycache__/
-*.py[cod]
-*.pyo
-.Python
-*.egg-info/
+# ── Node / Frontend ───────────────────────────────
+node_modules/
+frontend/node_modules/
 dist/
-build/
+frontend/dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json.bak
+
+# ── Python / Backend ───────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
 .venv/
 venv/
 env/
-.eggs/
+*.egg-info/
+.pytest_cache/
 
-# ── IDE / Editor ──────────────────────────────────────────────────────────────
-.vscode/
-.idea/
-*.swp
-*.swo
+# ── Databases (leftover / test artifacts) ─────────
+*.db
+*.sqlite3
+backend/tests/test_finrelief.db
+finrelief.db
+
+# ── Legacy / unused ────────────────────────────────
+_local-only/
+
+# ── OS / Editor junk ───────────────────────────────
 .DS_Store
 Thumbs.db
+.vscode/
+.idea/
 
-# ── Frontend ───────────────────────────────────────────────────────────────────
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local
+# ── Build / deploy artifacts ───────────────────────
+*.log
+.render/
+.vercel/
